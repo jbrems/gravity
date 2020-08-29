@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gravity</title>
+  <style>
+    body {
+      background-color: #f0f0f0;
+      text-align: center;
+    }
+    canvas {
+      background-color: #fefefe;
+      box-shadow: 3px 3px 6px #888888;
+    }
+  </style>
+</head>
+<body>
+<h1>Gravity</h1>
+<canvas id="canvas"></canvas>
+
+<p>
+  <button id="pause-button">Pause/resume simulation</button>
+  <button id="reset-button">Reset simulation</button>
+  <input type="checkbox" id="show-vectors"></input> <label for="show-vectors">Show vectors (x25)</label>
+</p>
+
+
+<script type="module">
+import { Canvas } from './canvas.js';
+window.onload = () => {
+  const canvasElement = document.getElementById('canvas');
+  const canvas = new Canvas(canvasElement);
+  canvas.start();
+  canvasElement.addEventListener('mousemove', canvas.onMouseMove.bind(canvas));
+
+  document.querySelector('#pause-button').addEventListener('click', () => canvas.togglePause());
+  document.querySelector('#reset-button').addEventListener('click', () => canvas.reset());
+  document.querySelector('#show-vectors').addEventListener('change', (event) => canvas.showVectors = event.target.checked);
+}
+
+</script>
+</body>
+</html>
