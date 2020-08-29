@@ -30,14 +30,15 @@ import { Canvas } from './canvas.js';
 window.onload = () => {
   const canvasElement = document.getElementById('canvas');
   const canvas = new Canvas(canvasElement);
-  canvas.start();
   canvasElement.addEventListener('mousemove', canvas.onMouseMove.bind(canvas));
 
   document.querySelector('#pause-button').addEventListener('click', () => canvas.togglePause());
   document.querySelector('#reset-button').addEventListener('click', () => canvas.reset());
-  document.querySelector('#show-vectors').addEventListener('change', (event) => canvas.showVectors = event.target.checked);
+  document.querySelector('#show-vectors').addEventListener('change', (event) => {
+    canvas.showVectors = event.target.checked;
+    canvas.draw();
+  });
 }
-
 </script>
 </body>
 </html>

@@ -12,6 +12,10 @@ export class Body {
     this.mass = mass || 1;
   }
 
+  resetAcc () {
+    this.acc = new Vector();
+  }
+
   move () {
     this.vel.add(this.acc);
     this.pos.add(this.vel);

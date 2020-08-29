@@ -18,7 +18,7 @@ export class Canvas {
     this.nativeElement.setAttribute('width', this.WIDTH);
 
     this.setup();
-    this.update();
+    this.start();
   }
 
   get ctx () {
@@ -50,20 +50,13 @@ export class Canvas {
   }
 
   update () {
-    this.ctx.fillStyle = 'rgba(0,0,0,.2)';
-    this.ctx.fillRect(0, 0, this.WIDTH, this.HEIGHT);
-
-    if (this.pointer) {
-      if (Vector.sub(this.pointer.pos, this.sun.pos).magnitude < 100) {
-        this.sun.moveTo(this.pointer.pos, .02);
-      } else {
-        this.sun.vel = new Vector(0, 0);
-      }
-    }
+    // If the cursor is near the sun (within 100px), move the sun towards the mouse
+    if (this.pointer && Vector.sub(this.pointer.pos, this.sun.pos).magnitude < 100)  this.sun.moveTo(this.pointer.pos, .02);
+    else this.sun.vel = new Vector(0, 0);
 
     this.bodies.forEach(body => {
-      body.acc = new Vector();
-      this.sun.attract(body)
+      body.resetAcc();
+      this.sun.attract(body);
     });
 
     this.earth.attract(this.moon);
@@ -72,6 +65,17 @@ export class Canvas {
 
     this.bodies.forEach(body => {
       body.move();
+    });
+
+    this.draw();
+  }
+
+  draw () {
+    if (this.isRunning) this.ctx.fillStyle = 'rgba(0,0,0,.2)';
+    else this.ctx.fillStyle = 'black';
+    this.ctx.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+
+    this.bodies.forEach(body => {
       body.draw(this.ctx, this.showVectors);
     });
 
@@ -107,9 +111,6 @@ export class Canvas {
   }
 
   reset () {
-    this.ctx.fillStyle = 'black';
-    this.ctx.fillRect(0, 0, this.WIDTH, this.HEIGHT);
-
     this.bodies = [];
     this.stars = [];
     this.setup();
